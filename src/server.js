@@ -1,8 +1,17 @@
 const express = require('express');
+const passport = require('passport');
 const connectDB = require('./config/database');
 const otpRoutes = require('./routes/otpRoutes');
+const testingRoutes = require('./routes/testing');
+var cors=require('cors');
+require('./utils/passport');
+
+
+
 
 const app = express();
+app.use(cors());
+app.use(passport.initialize());
 app.use(express.json());
 
 // Connect to MongoDB
@@ -17,4 +26,5 @@ connectDB().then(() => {
 });
 
 // Routes
-app.use('/otp', otpRoutes);
+app.use('/', otpRoutes);
+app.use('/', testingRoutes);
