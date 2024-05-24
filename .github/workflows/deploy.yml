@@ -40,6 +40,7 @@ jobs:
       - name: Ensure the server starts
         env:
           PORT: 8080
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
         run: |
           npm start &
           sleep 5
