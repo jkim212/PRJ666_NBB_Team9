@@ -2,6 +2,7 @@ const Otp = require('../models/otp');
 const OTP = require('../models/otp');
 const otpService = require('../services/otpService');
 const sendMail = require('../utils/mailer');
+const getToken=require('../utils/strategy');
 
 const createOTP = async (req, res) => {
   
@@ -34,7 +35,7 @@ const createOTP = async (req, res) => {
     // Send OTP via email or any other method
 
     res.status(201).json({ message: 'OTP generated and sent successfully.',
-     });
+     Sentemail: email});
   } catch (error) {
     console.error('Error generating OTP:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -45,7 +46,8 @@ const createOTP = async (req, res) => {
 
 
 const optVerify = async (req, res) => {
-  const { email, otp } = req.body;
+  
+  const { email, otp,role } = req.body;
 
   if (!email || !otp) {
     return res.status(400).json({ error: 'Email and OTP are required' });
@@ -62,7 +64,12 @@ const optVerify = async (req, res) => {
 
     // If the provided OTP matches the stored OTP
     if (otp === otpEntry.otp) {
-      return res.status(200).json({ message: 'OTP verified successfully' });
+      const user={
+        email:email,
+        role:role
+      }
+      const toekn = await getToken(user);
+      return res.status(200).json({ message: 'OTP verified successfully', token: toekn});
     } else {
       return res.status(400).json({ error: 'Invalid OTP' });
     }

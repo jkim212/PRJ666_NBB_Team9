@@ -41,6 +41,7 @@ jobs:
         env:
           PORT: 8080
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           npm start &
           sleep 5
