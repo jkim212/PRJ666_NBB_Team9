@@ -22,7 +22,7 @@ const Otp = mongoose.model('Otp', optSchema);
 
 // Function to connect to MongoDB
 function connect() {
-  const mongoDBConnectionString = process.env.MONGODB_URL;
+  const mongoDBConnectionString = 'mongodb+srv://prj66Project:namsansar@cluster0.htnq8jt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
   return mongoose.connect(mongoDBConnectionString)
     .then(() => {
