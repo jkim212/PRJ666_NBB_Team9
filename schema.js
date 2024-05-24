@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 // Define the schema for the OTP model
 const optSchema = new mongoose.Schema({
@@ -22,7 +23,7 @@ const Otp = mongoose.model('Otp', optSchema);
 
 // Function to connect to MongoDB
 function connect() {
-  const mongoDBConnectionString = 'mongodb+srv://prj66Project:namsansar@cluster0.htnq8jt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+  const mongoDBConnectionString = process.env.MONGODB_URL;
 
   return mongoose.connect(mongoDBConnectionString)
     .then(() => {
