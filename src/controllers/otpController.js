@@ -1,6 +1,7 @@
 const Otp = require('../models/otp');
 const OTP = require('../models/otp');
 const otpService = require('../services/otpService');
+const sendMail = require('../utils/mailer');
 
 const createOTP = async (req, res) => {
   
@@ -17,10 +18,18 @@ const createOTP = async (req, res) => {
     // Generate a new OTP
     const otp = otpService.getOtp();
 
+
     // Create a new OTP entry
     const newOTP = new OTP({ email, otp });
     await newOTP.save();
-    console.log('OTP:', otp);
+    try {
+      await sendMail(email, 'OTP Verification', `Your OTP is: ${otp}`);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    
+  
 
     // Send OTP via email or any other method
 
