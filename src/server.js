@@ -1,14 +1,14 @@
 const express=require('express');
 const app=express();
 const port=process.env.PORT || 8080;
-const mongodb=require('./schema.js');
+const connectMongoDB=require('./config/database');
 
 app.get('/',(req,res)=>{
     res.send('Hello World'+process.env.name);
 });
 
 
-mongodb.connect().then(()=>app.listen(port,()=>{
+connectMongoDB.connect().then(()=>app.listen(port,()=>{
     console.log('Server is running on port '+port);
 })).
 catch((err)=>{
