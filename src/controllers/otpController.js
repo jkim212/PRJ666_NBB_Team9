@@ -35,7 +35,7 @@ const createOTP = async (req, res) => {
     // Send OTP via email or any other method
 
     res.status(201).json({ message: 'OTP generated and sent successfully.',
-     });
+     Sentemail: email});
   } catch (error) {
     console.error('Error generating OTP:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -46,6 +46,7 @@ const createOTP = async (req, res) => {
 
 
 const optVerify = async (req, res) => {
+  
   const { email, otp,role } = req.body;
 
   if (!email || !otp) {
