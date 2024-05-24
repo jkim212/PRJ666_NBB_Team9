@@ -1,22 +1,20 @@
-const express=require('express');
-const app=express();
-const port=process.env.PORT || 8080;
-const connectMongoDB=require('./config/database');
+const express = require('express');
+const connectDB = require('./config/database');
+const otpRoutes = require('./routes/otpRoutes');
 
-app.get('/',(req,res)=>{
-    res.send('Hello World'+process.env.name);
+const app = express();
+app.use(express.json());
+
+// Connect to MongoDB
+connectDB().then(() => {
+  // Start server if database connection is successful
+  app.listen(8080, () => {
+    console.log('Server started on port 8080');
+  });
+}).catch((err) => {
+  console.error('Failed to connect to MongoDB:', err);
+  process.exit(1); // Exit process with failure
 });
 
-
-connectMongoDB.connect().then(()=>app.listen(port,()=>{
-    console.log('Server is running on port '+port);
-})).
-catch((err)=>{
- 
-
-  console.error("Failed to connect to MongoDB", err);
-
-});
-
-
-
+// Routes
+app.use('/otp', otpRoutes);

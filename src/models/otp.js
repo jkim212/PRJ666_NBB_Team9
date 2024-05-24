@@ -24,4 +24,4 @@ const Otp = mongoose.model('Otp', optSchema);
 
 
 // Exporting everything in one go
-module.exports = {Otp,};
+module.exports = Otp;
