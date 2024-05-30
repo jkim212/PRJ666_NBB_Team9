@@ -11,13 +11,7 @@ var cors=require('cors');
 require('./utils/passport');
 
 const app = express();
-const corsOptions = {
-  origin: '*', // Allow all origins. Adjust as needed.
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-app.use(cors(corsOptions));
-
+app.use(cors());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(passport.initialize());
 app.use(express.json());
