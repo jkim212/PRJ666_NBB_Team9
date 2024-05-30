@@ -2,18 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/server.js", // Update to your server entry point
+      "src": "src/server.js", 
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/generate/otp",
-      "dest": "src/server.js" // Adjust to your server entry point
+      "dest": "src/server.js" 
     },
     {
       "src": "/verify/otp",
-      "dest": "src/server.js" // Adjust to your server entry point
+      "dest": "src/server.js" 
     },
     {
       "src": "/(.*)",
