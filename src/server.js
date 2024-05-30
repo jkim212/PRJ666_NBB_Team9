@@ -78,5 +78,11 @@ app.get('/post/:id', async (req, res) => {
 })
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+app.get('/testing', (req, res) => {
+  res.send('testing route');
+});
 app.use('/', otpRoutes);
 app.use('/', testingRoutes);
