@@ -1,10 +1,11 @@
-const Otp = require('../models/otp');
 const OTP = require('../models/otp');
 const otpService = require('../services/otpService');
 const sendMail = require('../utils/mailer');
 const getToken=require('../utils/strategy');
+const user = require('../models/user');
 
 const createOTP = async (req, res) => {
+  console.log(req.body);
   
   const { email } = req.body;
 
@@ -64,10 +65,18 @@ const optVerify = async (req, res) => {
 
     // If the provided OTP matches the stored OTP
     if (otp === otpEntry.otp) {
-      const user={
+      let gotuser={
         email:email,
         role:role
       }
+      const existingUser = await user.findOne({ email });
+      if (!existingUser) {
+        gotuser = await user.create(gotuser);
+        
+      } else {
+        gotuser = existingUser;
+      }
+
       const toekn = await getToken(user);
       return res.status(200).json({ message: 'OTP verified successfully', token: toekn});
     } else {
