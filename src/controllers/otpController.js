@@ -65,10 +65,8 @@ const optVerify = async (req, res) => {
 
     // If the provided OTP matches the stored OTP
     if (otp === otpEntry.otp) {
-      let gotuser={
-        email:email,
-        role:role
-      }
+    
+      
       const existingUser = await user.findOne({ email });
       if (!existingUser) {
         gotuser = await user.create(gotuser);
@@ -76,8 +74,9 @@ const optVerify = async (req, res) => {
       } else {
         gotuser = existingUser;
       }
+      
 
-      const toekn = await getToken(user);
+      const toekn =  getToken(gotuser);
       return res.status(200).json({ message: 'OTP verified successfully', token: toekn});
     } else {
       return res.status(400).json({ error: 'Invalid OTP' });
