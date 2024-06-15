@@ -11,11 +11,11 @@ const jwtOptions = {
 };
 
 const strategy = new JwtStrategy(jwtOptions, (jwt_payload, done) => {
-  console.log('payload received', jwt_payload.role);
+
 
   if (jwt_payload) {
     done(null, {
-      _id: jwt_payload._id,
+      id: jwt_payload.id,
       email: jwt_payload.email,
       role: jwt_payload.role,
     });
