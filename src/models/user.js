@@ -11,16 +11,7 @@ role:{
   type:String,
   required:true,
 },
-questions:[{
-  type: mongoose.Schema.Types.ObjectId,
 
-}],
-
-
-answers:[{
-  type: mongoose.Schema.Types.ObjectId,
-
-}],
 created_at: {
   type: Date,
   default: Date.now,
