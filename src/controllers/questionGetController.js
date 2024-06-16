@@ -68,4 +68,4 @@ const getQuestinonById = async (req, res) => {
     catch(err){};
   }
   
-  module.exports = { getQuestions, getQuestionsByUser};
+  module.exports = { getQuestions, questionByuser,getQuestinonById};

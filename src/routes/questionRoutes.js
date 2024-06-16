@@ -7,7 +7,7 @@ const questionGetController = require('../controllers/questionGetController');
 // Route to create a new question (using POST)
 router.post('/createQuestion', authenticate, questionPostController.createQuestion);
 router.get('/getQuestions', authenticate, questionGetController.getQuestions);
-router.get('/getQuestionsbyUser', authenticate, questionGetController.getQuestionsbyUser);
-router.get('/getQuestion/:id', authenticate, questionGetController.getQuestion);
+router.get('/getQuestionsbyUser', authenticate, questionGetController.questionByuser);
+router.get('/getQuestion/:id', authenticate, questionGetController.getQuestinonById);
 
 module.exports = router;
