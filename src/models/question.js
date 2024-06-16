@@ -36,3 +36,5 @@ upVotesNumber:{
 },
 });
 const Question = mongoose.model('Question', questionSchema);
+
+module.exports = Question;
