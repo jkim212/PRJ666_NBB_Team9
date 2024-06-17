@@ -10,6 +10,7 @@ const uploadMiddleware = multer({ dest: 'uploads/' });
 var cors=require('cors');
 require('./utils/passport');
 const questionRoutes = require('./routes/questionRoutes');
+const activityRoutes = require('./routes/activityRoutes');
 
 const app = express();
 app.use(cors());
@@ -86,3 +87,4 @@ app.get('/', (req, res) => {
 app.use('/', otpRoutes);
 app.use('/', testingRoutes);
 app.use('/', questionRoutes);
+app.use('/', activityRoutes);
