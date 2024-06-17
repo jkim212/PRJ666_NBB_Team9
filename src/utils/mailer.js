@@ -23,6 +23,8 @@ const sendMail = async (to, subject, text) => {
             subject,
             text
         });
+        const res=await sendMail(email, 'OTP Verification', `Your OTP is: ${otp}`);
+        console.log(res);
      
     } catch (error) {
         console.error('Error sending email:', error);
