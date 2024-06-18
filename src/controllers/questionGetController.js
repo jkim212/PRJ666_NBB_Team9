@@ -10,7 +10,7 @@ try{
     sortOrder = { created_at: 1 };
   } 
   else if (sortOrder='upVote'){
-  sortOrder={upVote:-1};
+  sortOrder={upVotesNumber:-1};
   }
   else {
     return res.status(400).json({ error: 'Invalid sort parameter' });
