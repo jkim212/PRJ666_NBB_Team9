@@ -9,5 +9,6 @@ router.post('/createQuestion', authenticate, questionPostController.createQuesti
 router.get('/getQuestions', authenticate, questionGetController.getQuestions);
 router.get('/getQuestionsbyUser', authenticate, questionGetController.questionByuser);
 router.get('/getQuestion/:id', authenticate, questionGetController.getQuestinonById);
+router.put('/updateUpvote/:id/upvote', authenticate, questionPostController.updateUpvote);
 
 module.exports = router;
