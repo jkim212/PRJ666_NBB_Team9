@@ -61,11 +61,30 @@ const getQuestinonById = async (req, res) => {
     if (!question) {
       return res.status(404).json({ error: 'Question not found' });
     };
-    delete question.upVotes;
-    delete question.modified_at;
-    res.status(200).json(question);
+    let upvotedByUser = false;
+
+    if (req.user && req.user.id) {
+      const userId = req.user.id;
+      upvotedByUser = question.upVotes.includes(userId.toString());
+    }
+    const questionToSend = {
+      ...question,
+      upvotedByUser: upvotedByUser
+    };
+      
+    delete questionToSend.upVotes;
+    delete questionToSend.modified_at;
+
+    // Send the modified question object in the response
+    
+
+    // Add the upvotedByUser property
+   
+
+    delete questionToSend.upVotes;
+    delete questionToSend.modified_at;
+    res.status(200).json(questionToSend);
   }
     catch(err){};
   }
-  
   module.exports = { getQuestions, questionByuser,getQuestinonById};

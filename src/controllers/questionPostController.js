@@ -24,4 +24,44 @@ catch(error){
 }
 
 };
-module.exports = {createQuestion }
+const updateUpvote = async (req, res) => {
+  const { id } = req.params;
+  const userId= req.user.id;
+  const upvote=req.body.upvote;
+  try {
+    const question= await Question.findOne({_id:id});
+    if(!question){
+      return res.status(404).json({error:'Question not found'});
+    };
+    
+    if(upvote){
+    if(!question.upVotes.includes(userId)){
+      question.upVotes.push(userId);
+      question.upVotesNumber=question.upVotesNumber+1;
+      await question.save();
+      return res.status(200).json({upVotesNumber:question.upVotesNumber});
+
+    }
+    
+  }
+  else{
+    
+    const index=question.upVotes.indexOf(userId);
+    
+    if (index > -1) {
+      question.upVotes.splice(index, 1);
+      question.upVotesNumber=question.upVotesNumber-1;
+      await question.save();
+      return res.status(200).json({upVotesNumber:question.upVotesNumber});
+    }
+  }
+
+  }catch(err){
+    console.log(err);
+    res.status(500).json({error:'Internal server error'});
+  }
+}
+  
+ 
+
+module.exports = {createQuestion ,updateUpvote}
