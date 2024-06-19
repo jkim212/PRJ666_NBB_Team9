@@ -12,6 +12,7 @@ const answerRoutes = require('./routes/answerRoutes');
 require('./utils/passport');
 const questionRoutes = require('./routes/questionRoutes');
 const activityRoutes = require('./routes/activityRoutes');
+const freeboardRoutes = require('./routes/freeboardRoutes');
 
 const app = express();
 app.use(cors());
@@ -86,6 +87,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', otpRoutes);
+app.use('/', freeboardRoutes);
 app.use('/', testingRoutes);
 app.use('/', questionRoutes);
 app.use('/', activityRoutes);
