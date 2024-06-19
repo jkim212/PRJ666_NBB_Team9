@@ -4,6 +4,7 @@ const fs = require('fs');
 exports.createActivity = async (req, res) => {
   const { title, date, location, link } = req.body;
   let image = null;
+  const {id}=req.user;
 
   if (req.file) {
     const { originalname, path } = req.file;
@@ -21,6 +22,7 @@ exports.createActivity = async (req, res) => {
       location,
       link,
       image,
+      id
     });
 
     const savedActivity = await newActivity.save();
