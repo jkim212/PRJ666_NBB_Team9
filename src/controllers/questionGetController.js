@@ -42,7 +42,7 @@ catch(err){
 const questionByuser = async (req, res) => {
   const { id } = req.user;
   try {
-    const questions = await Question.find({ user: id });
+    const questions = await Question.find({ user: id }).sort({ created_at: -1 });
     questions.forEach((question) => {
       delete question.upVotes;
       delete question.modified_at;
