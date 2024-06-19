@@ -20,9 +20,7 @@ modified_at: {
 user:{
   type: mongoose.Schema.Types.ObjectId,
 },
-answers:[{
-  type: mongoose.Schema.Types.ObjectId,
-}],
+
 upVotes:[{
   type: mongoose.Schema.Types.ObjectId,
 }],

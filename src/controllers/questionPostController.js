@@ -1,16 +1,14 @@
 const Question =require('../models/question');
 
 const createQuestion = async (req, res) => {
-  console.log(req.body);
-  console.log(req.user);
 
-const { title, description, tags } = req.body;
+const newQuestion = req.body;
 const {id}=req.user;
 try {
   const questionDoc = new Question({
-    title,
-    description,
-    tags,
+    title: newQuestion.title,
+    description: newQuestion.description,
+    tags: newQuestion.tags,
     user: id,
   });
 
@@ -62,6 +60,40 @@ const updateUpvote = async (req, res) => {
   }
 }
   
- 
+const updaateQuestion = async (req, res) => {
+  const { id } = req.params;
+  const newQuestion= req.body;
 
-module.exports = {createQuestion ,updateUpvote}
+  try {
+    const question=await Question.findOne({_id:id});
+    if(!question){
+      return res.status(404).json({error:'Question not found'});
+    };
+    question.title=newQuestion.title;
+    question.description=newQuestion.description;
+    question.tags=newQuestion.tags;
+    question.modified_at=Date.now();
+    await question.save();
+    res.status(200).json({id: question._id});
+}
+catch(err){
+
+  console.log(err);
+  res.status(500).json({error:'Internal server error'});
+}
+};
+const deleteQuestion = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const question = await Question.findByIdAndDelete(id);
+    if (!question) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+    res.status(200).json({ message: 'Question deleted successfully' });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+module.exports = {createQuestion ,updateUpvote,updaateQuestion,deleteQuestion}
