@@ -21,16 +21,18 @@ router.post('/activities', uploadMiddleware.single('file'), async (req, res) => 
   }
 
   try {
-    const activityDoc = await Activity.create({
+    const newActivity = new Activity({
       title,
       date,
       location,
       link,
       image,
     });
-    res.status(201).json(activityDoc);
+
+    const savedActivity = await newActivity.save();
+    res.status(201).json(savedActivity);
   } catch (error) {
-    console.error('Error creating activity from backend:', error);
+    console.error('Error creating activity:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -77,21 +79,19 @@ router.put('/activities/:id', uploadMiddleware.single('file'), async (req, res) 
   }
 
   try {
-    const activityDoc = await Activity.findByIdAndUpdate(
-      id,
-      {
-        title,
-        date,
-        location,
-        link,
-        image,
-      },
-      { new: true }
-    );
+    const activityDoc = await Activity.findById(id);
     if (!activityDoc) {
       return res.status(404).json({ error: 'Activity not found' });
     }
-    res.json(activityDoc);
+
+    activityDoc.title = title;
+    activityDoc.date = date;
+    activityDoc.location = location;
+    activityDoc.link = link;
+    activityDoc.image = image;
+
+    const updatedActivity = await activityDoc.save();
+    res.json(updatedActivity);
   } catch (error) {
     console.error(`Error updating activity with ID ${id}:`, error);
     res.status(500).json({ error: 'Server error' });
@@ -102,8 +102,8 @@ router.put('/activities/:id', uploadMiddleware.single('file'), async (req, res) 
 router.delete('/activities/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const activityDoc = await Activity.findByIdAndDelete(id);
-    if (!activityDoc) {
+    const deletedActivity = await Activity.findByIdAndDelete(id);
+    if (!deletedActivity) {
       return res.status(404).json({ error: 'Activity not found' });
     }
     res.json({ message: 'Activity deleted successfully' });
