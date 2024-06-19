@@ -3,12 +3,11 @@ const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
 const Activity = require('../models/activity');
-const authenticate = require('../middleware/authenticate');
 
 const uploadMiddleware = multer({ dest: 'uploads/' });
 
 // Create a new activity
-router.post('/activities', authenticate, async (req, res) => {
+router.post('/activities', uploadMiddleware.single('file'), async (req, res) => {
   const { title, date, location, link } = req.body;
   let image = null;
 
@@ -63,7 +62,7 @@ router.get('/activities/:id', async (req, res) => {
 });
 
 // Update an existing activity
-router.put('/activities/:id', authenticate, async (req, res) => {
+router.put('/activities/:id', uploadMiddleware.single('file'), async (req, res) => {
   const { id } = req.params;
   const { title, date, location, link } = req.body;
   let image = null;
@@ -95,7 +94,7 @@ router.put('/activities/:id', authenticate, async (req, res) => {
     res.json(activityDoc);
   } catch (error) {
     console.error(`Error updating activity with ID ${id}:`, error);
-    res.status500().json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
