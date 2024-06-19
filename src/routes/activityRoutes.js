@@ -30,7 +30,7 @@ router.post('/activities', uploadMiddleware.single('file'), async (req, res) => 
     });
     res.status(201).json(activityDoc);
   } catch (error) {
-    console.error('Error creating activity:', error);
+    console.error('Error creating activity from backend:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
