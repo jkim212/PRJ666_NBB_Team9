@@ -7,7 +7,7 @@ const Activity = require('../models/activity');
 const uploadMiddleware = multer({ dest: 'uploads/' });
 
 // Create a new activity
-router.post('/activity', uploadMiddleware.single('file'), async (req, res) => {
+router.post('/activities', uploadMiddleware.single('file'), async (req, res) => {
   const { title, date, location, link } = req.body;
   let image = null;
 
@@ -36,7 +36,7 @@ router.post('/activity', uploadMiddleware.single('file'), async (req, res) => {
 });
 
 // Fetch all activities
-router.get('/activity', async (req, res) => {
+router.get('/activities', async (req, res) => {
   try {
     const activities = await Activity.find().sort({ date: 1 });
     res.json(activities);
@@ -47,7 +47,7 @@ router.get('/activity', async (req, res) => {
 });
 
 // Fetch a single activity by ID
-router.get('/activity/:id', async (req, res) => {
+router.get('/activities/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const activityDoc = await Activity.findById(id);
@@ -62,7 +62,7 @@ router.get('/activity/:id', async (req, res) => {
 });
 
 // Update an existing activity
-router.put('/activity/:id', uploadMiddleware.single('file'), async (req, res) => {
+router.put('/activities/:id', uploadMiddleware.single('file'), async (req, res) => {
   const { id } = req.params;
   const { title, date, location, link } = req.body;
   let image = null;
@@ -94,12 +94,12 @@ router.put('/activity/:id', uploadMiddleware.single('file'), async (req, res) =>
     res.json(activityDoc);
   } catch (error) {
     console.error(`Error updating activity with ID ${id}:`, error);
-    res.status(500).json({ error: 'Server error' });
+    res.status500().json({ error: 'Server error' });
   }
 });
 
 // Delete an activity
-router.delete('/activity/:id', async (req, res) => {
+router.delete('/activities/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const activityDoc = await Activity.findByIdAndDelete(id);
