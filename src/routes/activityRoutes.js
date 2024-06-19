@@ -6,10 +6,10 @@ const activityController = require('../controllers/activityController');
 
 const uploadMiddleware = multer({ dest: 'uploads/' });
 
-router.post('/activities', uploadMiddleware.single('image'), activityController.createActivity);
+router.post('/activities', authenticate, uploadMiddleware.single('image'), activityController.createActivity);
 router.get('/activities', activityController.getAllActivities);
 router.get('/activities/:id', activityController.getActivityById);
-router.put('/activities/:id', uploadMiddleware.single('image'), activityController.updateActivity);
-router.delete('/activities/:id', activityController.deleteActivity);
+router.put('/activities/:id', authenticate, uploadMiddleware.single('image'), activityController.updateActivity);
+router.delete('/activities/:id', authenticate, activityController.deleteActivity);
 
 module.exports = router;

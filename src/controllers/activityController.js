@@ -22,7 +22,7 @@ exports.createActivity = async (req, res) => {
       location,
       link,
       image,
-      id
+      creator: id
     });
 
     const savedActivity = await newActivity.save();
