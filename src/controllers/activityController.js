@@ -52,7 +52,7 @@ exports.getActivityById = async (req, res) => {
       return res.status(404).json({ error: 'Activity not found' });
     }
 
-    const isCreator = req.user && req.user._id.toString() === activity.creator._id.toString();
+    const isCreator = req.user && req.user.id;
 
     console.log('User:', req.user);
     console.log('User ID:', req.user._id);
