@@ -47,10 +47,17 @@ exports.getActivityById = async (req, res) => {
   const { id } = req.params;
   try {
     const activity = await Activity.findById(id);
+
+    let isCreator = false;
+
+    if (req.user && req.user.id === activity.creator.toString()) {
+      isCreator = true;
+    }
+
     if (!activity) {
       return res.status(404).json({ error: 'Activity not found' });
     }
-    res.json(activity);
+    res.json({ activity, isCreator });
   } catch (error) {
     console.error(`Error fetching activity with ID ${id}:`, error.message);
     res.status(500).json({ error: 'Server error' });
