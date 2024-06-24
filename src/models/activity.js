@@ -7,7 +7,8 @@ const activitySchema = new mongoose.Schema({
   link: { type: String },
   image: { type: String },
   joined: { type: Number, default: 0 },
-  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  participants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
 module.exports = mongoose.model('Activity', activitySchema);
