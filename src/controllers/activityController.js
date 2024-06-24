@@ -111,3 +111,27 @@ exports.deleteActivity = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+exports.joinActivity = async (req, res) => {
+  const { activityId } = req.body;
+  const { userId } = req.user;
+
+  try {
+    const activity = await Activity.findById(activityId);
+    if (!activity) {
+      return res.status(404).json({ error: 'Activity not found' });
+    }
+
+    if (activity.participants.includes(userId)) {
+      return res.status(400).json({ error: 'User is already a participant' });
+    }
+
+    activity.participants.push(userId);
+    await activity.save();
+
+    res.json({ message: 'Joined activity successfully' });
+  } catch (error) {
+    console.error('Error joining activity:', error.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
