@@ -46,7 +46,7 @@ exports.getAllActivities = async (req, res) => {
 exports.getActivityById = async (req, res) => {
   const { id } = req.params;
   try {
-    const activity = await Activity.findById(id);
+    const activity = await Activity.findOne({ _id: id });
 
     let isCreator = false;
 
@@ -57,6 +57,7 @@ exports.getActivityById = async (req, res) => {
     if (!activity) {
       return res.status(404).json({ error: 'Activity not found' });
     }
+
     res.json({ activity, isCreator });
   } catch (error) {
     console.error(`Error fetching activity with ID ${id}:`, error.message);
