@@ -11,6 +11,6 @@ router.get('/activities', activityController.getAllActivities);
 router.get('/activities/:id', activityController.getActivityById);
 router.put('/activities/:id', uploadMiddleware.single('image'), activityController.updateActivity);
 router.delete('/activities/:id', activityController.deleteActivity);
-router.post('/activities/join', activityController.joinActivity);
+router.post('/activities/join', authenticate, activityController.joinActivity);
 
 module.exports = router;
