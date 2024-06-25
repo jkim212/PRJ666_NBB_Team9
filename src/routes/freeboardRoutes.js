@@ -114,5 +114,39 @@ router.delete('/freeboard/:id', async (req, res) => {
       res.status(500).json({ error: 'Server error' });
     }
   });
+
+  router.delete('/comments/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const comment = await Comment.findByIdAndDelete(id);
+      if (!comment) {
+        return res.status(404).json({ error: 'Comment not found' });
+      }
+      res.json({ message: 'Comment deleted successfully' });
+    } catch (error) {
+      console.error(`Error deleting comment with ID ${id}:`, error);
+      res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+  router.put('/comments/:id', async (req, res) => {
+    const { id } = req.params; 
+    const { body } = req.body;
+
+    try {
+        const comment = await Comment.findById(id);
+        if (!comment) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        comment.body = body;
+
+        await comment.save();
+        res.json(comment);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while updating the comment' });
+    }
+});
  
 module.exports = router
