@@ -114,7 +114,7 @@ exports.deleteActivity = async (req, res) => {
 };
 
 exports.joinActivity = async (req, res) => {
-  const { activityId } = req.body;
+  const { activityId } = req.params;
   const { userId } = req.user;
 
   try {
