@@ -21,6 +21,10 @@ const evnetSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
+  category:[ {
+    type: String,
+    required: true
+  }],
 });
 
 const Event = mongoose.model("Event", evnetSchema);
