@@ -4,6 +4,7 @@ const multer = require('multer');
 const fs = require('fs');
 const Post = require('../models/post');
 const Comment = require('../models/comments');
+const User = require('../models/user');
 
 const uploadMiddleware = multer({ dest: 'uploads/' });
 
@@ -48,19 +49,23 @@ router.post('/freeboard', uploadMiddleware.single('file'), async (req, res) => {
     fs.renameSync(path, newPath);
   
   
-    const { title, content } = req.body;
+    const { title, content, userId } = req.body;
+
     const postDoc = await Post.create({
       title,
       content,
       image: newPath,
+      user: userId,
     });
+
+    await User.findByIdAndUpdate(userId, { $push: {posts: postDoc._id }})
     res.json(postDoc);
     console.log(postDoc);
 });
 
 router.post('/freeboard/:id/comment', async (req, res) => {
     const { id } = req.params;
-    const { body } = req.body; 
+    const { body, userId } = req.body; 
 
     try {
         if (!body) {
@@ -69,7 +74,7 @@ router.post('/freeboard/:id/comment', async (req, res) => {
 
         const newComment = await Comment.create({
             postId: id,
-            //userId,
+            user: userId,
             body
         });
 
@@ -83,7 +88,7 @@ router.post('/freeboard/:id/comment', async (req, res) => {
 router.get('/freeboard/:id/comments', async (req, res) => {
     const { id } = req.params;
     try {
-        const comments = await Comment.find({ postId: id }).sort({ createdAt: -1 });
+        const comments = await Comment.find({ postId: id }).sort({ createdAt: -1 }).populate('user', 'first_name last_name');
         res.json({ comments });
     } catch (error) {
         console.error(`Error fetching comments for post ID ${id}:`, error);
@@ -92,13 +97,25 @@ router.get('/freeboard/:id/comments', async (req, res) => {
     });
   
 router.get('/freeboard', async (req,res) => {
-    res.json(await Post.find().sort({createdAt: -1}));
+    try {
+        const posts = await Post.find().sort({createdAt: -1}).populate('user', 'first_name last_name');
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching posts', error});
+    }
 });
   
 router.get('/freeboard/:id', async (req, res) => {
     const {id} = req.params;
-    const postDoc = await Post.findById(id);
-    res.json(postDoc);
+    try {
+        const postDoc = await Post.findById(id).populate('user', 'first_name last_name');
+        if (!postDoc) {
+            return res.status(404).json({error: 'Post not found'});
+        }
+        res.json(postDoc);
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching post', error});
+    }
 })
 
 router.delete('/freeboard/:id', async (req, res) => {
