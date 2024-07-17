@@ -1,5 +1,6 @@
 const Activity = require('../models/activity');
 const fs = require('fs');
+const User = require('../models/user');
 
 exports.createActivity = async (req, res) => {
   const { title, date, location, link } = req.body;
@@ -115,7 +116,7 @@ exports.deleteActivity = async (req, res) => {
 
 exports.joinActivity = async (req, res) => {
   const { activityId } = req.params;
-  const { userId } = req.user;
+  const userId = req.user.id;
 
   try {
     const activity = await Activity.findById(activityId);
@@ -129,6 +130,18 @@ exports.joinActivity = async (req, res) => {
 
     activity.participants.push(userId);
     await activity.save();
+
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!user.activities.includes(activityId)) {
+      user.activities.push(activityId);
+      await user.save();
+    }
+
 
     res.json({ message: 'Joined activity successfully' });
   } catch (error) {
