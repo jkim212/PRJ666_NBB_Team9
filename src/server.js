@@ -15,6 +15,7 @@ const activityRoutes = require('./routes/activityRoutes');
 const freeboardRoutes = require('./routes/freeboardRoutes');
 const eventRoutes = require('./routes/eventRoute');
 const userRoutes = require('./routes/userRoute');
+const profileRoutes = require('./routes/profileRoutes');
 
 const app = express();
 app.use(
@@ -98,6 +99,7 @@ app.get('/', (req, res) => {
 app.use('/', otpRoutes);
 app.use('/', freeboardRoutes);
 app.use('/', testingRoutes);
+app.use('/', profileRoutes);
 app.use('/', questionRoutes);
 app.use('/', activityRoutes);
 app.use('/', answerRoutes);
