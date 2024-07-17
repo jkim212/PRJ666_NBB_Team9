@@ -6,10 +6,11 @@ if(req.body){
 const newEevent = req.body;
 try{
 const eventDoc = new Event({
-title: newEevent.title,
-description: newEevent.description,
-imageUrl: newEevent.imageUrl,
-user: user.id,
+  title: newEevent.title,
+  description: newEevent.description,
+  imageUrl: newEevent.imageUrl,
+  user: user.id,
+  category: newEevent.categories,
 });
 await eventDoc.save();
 const event = await Event.findById(eventDoc._id)
@@ -26,19 +27,26 @@ res.status(400).json({error:"Bad request"});
 }
 
 }
-const getEvents = async (req, res) => { 
-  try{
-    const events = await Event.find().sort({createdAt: -1});
+const getEvents = async (req, res) => {
+  try {
+    const { newest, category } = req.query;
+    const filter = category ? { category: category } : {};
+
+    const events = await Event.find(filter).sort({
+      created_at: newest === "true" ? -1 : 1,
+    });
+
     res.status(200).json(events);
-  }catch(error){
-    console.error('Error fetching events:', error);
-    res.status(500).json({ error: 'Internal server error' });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};
+
 const getEventsByUser = async (req, res) => {
   const id=req.user.id;
   try{
-    const events = await Event.find({user:id}).sort({createdAt: -1});
+    const events = await Event.find({ user: id }).sort({ created_at: -1 });
     res.status(200).json(events);
   } catch(error){
     console.error('Error fetching events:', error);
@@ -69,6 +77,7 @@ const updateEvent = async (req, res) => {
     event.title = newEvent.title;
     event.description = newEvent.description;
     event.imageUrl = newEvent.imageUrl;
+    event.category = newEvent.categories;
     await event.save();
     const updatedEvent = await Event.findById(event._id);
     res.status(200).json(updatedEvent);
