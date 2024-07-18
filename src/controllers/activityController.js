@@ -3,9 +3,8 @@ const fs = require('fs');
 const User = require('../models/user');
 
 exports.createActivity = async (req, res) => {
-  const { title, date, location, link } = req.body;
+  const { title, date, location, link, userId } = req.body;
   let image = null;
-  const {id}=req.user;
 
   if (req.file) {
     const { originalname, path } = req.file;
@@ -23,7 +22,7 @@ exports.createActivity = async (req, res) => {
       location,
       link,
       image,
-      creator: id
+      user: userId
     });
 
     const savedActivity = await newActivity.save();
@@ -36,7 +35,7 @@ exports.createActivity = async (req, res) => {
 
 exports.getAllActivities = async (req, res) => {
   try {
-    const activities = await Activity.find().sort({ date: 1 });
+    const activities = await Activity.find().sort({ date: 1 }).populate('user', 'first_name last_name');;
     res.json(activities);
   } catch (error) {
     console.error('Error fetching activities:', error.message);
@@ -47,7 +46,7 @@ exports.getAllActivities = async (req, res) => {
 exports.getActivityById = async (req, res) => {
   const { id } = req.params;
   try {
-    const activity = await Activity.findOne({ _id: id });
+    const activity = await Activity.findOne({ _id: id }).populate('user', 'first_name last_name');
 
     let isCreator = false;
 
@@ -115,37 +114,27 @@ exports.deleteActivity = async (req, res) => {
 };
 
 exports.joinActivity = async (req, res) => {
-  const { activityId } = req.params;
-  const userId = req.user.id;
+    const { activityId, userId } = req.body;
+  
+    try {
+      const activity = await Activity.findById(activityId);
+      if (!activity) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
 
-  try {
-    const activity = await Activity.findById(activityId);
-    if (!activity) {
-      return res.status(404).json({ error: 'Activity not found' });
+      if (activity.participants.includes(userId)) {
+        return res.json({ error: 'You already joined the activity.' });
+      }
+      activity.participants.push(userId);
+      activity.joined += 1;
+      await activity.save();
+
+      await User.findByIdAndUpdate(userId, { $push: { activities: activity._id } });
+
+      res.json({ message: 'Joined activity successfully', joined: activity.joined });
+    } catch (error) {
+      console.error('Error joining activity:', error.message);
+      res.status(500).json({ error: 'Server error' });
     }
-
-    if (activity.participants.includes(userId)) {
-      return res.status(400).json({ error: 'User is already a participant' });
-    }
-
-    activity.participants.push(userId);
-    await activity.save();
-
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    if (!user.activities.includes(activityId)) {
-      user.activities.push(activityId);
-      await user.save();
-    }
-
-
-    res.json({ message: 'Joined activity successfully' });
-  } catch (error) {
-    console.error('Error joining activity:', error.message);
-    res.status(500).json({ error: 'Server error' });
-  }
-};
+  };
+  
