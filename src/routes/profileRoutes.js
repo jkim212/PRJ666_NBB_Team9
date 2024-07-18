@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 router.get('/profile/:userId', async (req, res) => {
     const userId = req.params.userId;
     try {
-        const user = await User.findById(userId).populate('posts');
+         const user = await User.findById(userId).populate('posts activities');
         res.json(user);
     } catch (error) {
         res.status(500).send(error);
