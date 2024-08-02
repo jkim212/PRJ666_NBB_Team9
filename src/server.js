@@ -18,6 +18,7 @@ const userRoutes = require('./routes/userRoute');
 const profileRoutes = require('./routes/profileRoutes');
 const ticketRoutes = require('./routes/titcketRoute');
 const ticketResponseRoutes = require('./routes/ticketResponse');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 const app = express();
 app.use(cors());
@@ -102,3 +103,4 @@ app.use('/', eventRoutes);
 app.use('/', userRoutes);
 app.use('/', ticketRoutes);
 app.use('/', ticketResponseRoutes);
+app.use('/', notificationRoutes);
