@@ -12,5 +12,8 @@ router.get('/activities/:id', activityController.getActivityById);
 router.put('/activities/:id', authenticate, uploadMiddleware.single('image'), activityController.updateActivity);
 router.delete('/activities/:id', authenticate, activityController.deleteActivity);
 router.post('/activities/join', activityController.joinActivity);
+router.post('/activities/:id/chat', activityController.postGroupChat);
+router.get('/activities/:id/chat', activityController.getGroupChat);
+router.delete('/chat/:id', activityController.deleteGroupChat);
 
 module.exports = router;
