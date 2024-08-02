@@ -164,7 +164,7 @@ exports.joinActivity = async (req, res) => {
   exports.getGroupChat = async (req, res) => {
     const { id } = req.params;
     if (!id) {
-      return res.status(400).json({ error: 'Activity ID is required' });
+      return res.status(400).json({ error: 'Activity ID is required!' });
     }
     try {
       const chat = await Chat.find({ activityId: id }).populate('user', 'first_name last_name bio program entrance_year profile_picture');
