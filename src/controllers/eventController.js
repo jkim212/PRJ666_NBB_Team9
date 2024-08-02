@@ -86,4 +86,20 @@ const updateEvent = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
-module.exports = { createEvent, getEvents, getEventsByUser, deleteEvent, updateEvent };
+const getEevntbyId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const event = await Event.findById(id);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    } else {
+      
+      res.status(200).json(event);
+    }
+  }
+  catch (error) {
+    console.error('Error fetching event:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  };
+module.exports = { createEvent, getEvents, getEventsByUser, deleteEvent, updateEvent,getEevntbyId};

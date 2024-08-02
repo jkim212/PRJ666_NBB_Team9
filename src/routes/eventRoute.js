@@ -9,5 +9,6 @@ router.get("/getEvents", authenticate, eventController.getEvents);
 router.get("/getEventByUser", authenticate, eventController.getEventsByUser);
 router.delete("/deleteEvent/:id", authenticate, eventController.deleteEvent);
 router.post("/updateEvent/:id", authenticate, eventController.updateEvent);
+router.get("/getEvent/:id", authenticate, eventController.getEevntbyId);
 
 module.exports = router;
