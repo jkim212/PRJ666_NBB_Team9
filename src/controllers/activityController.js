@@ -126,11 +126,27 @@ exports.joinActivity = async (req, res) => {
       if (activity.participants.includes(userId)) {
         return res.json({ error: 'You already joined the activity.' });
       }
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
       activity.participants.push(userId);
       activity.joined += 1;
       await activity.save();
 
       await User.findByIdAndUpdate(userId, { $push: { activities: activity._id } });
+
+
+      const notification = new Notification({
+        user: activity.user._id,
+        type: 'joinActivity',
+        activity: activity._id,
+        message: `User ${user.first_name} ${user.last_name} joined your activity: ${activity.title}`
+      });
+      await notification.save();
+
 
       res.json({ message: 'Joined activity successfully', joined: activity.joined });
     } catch (error) {
