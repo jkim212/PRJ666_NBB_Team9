@@ -20,14 +20,7 @@ const ticketRoutes = require('./routes/titcketRoute');
 const ticketResponseRoutes = require('./routes/ticketResponse');
 
 const app = express();
-app.use(
-  cors({
-    origin:
-      "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(passport.initialize());
 app.use(express.json());
