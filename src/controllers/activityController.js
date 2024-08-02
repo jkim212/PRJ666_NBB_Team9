@@ -1,6 +1,7 @@
 const Activity = require('../models/activity');
 const fs = require('fs');
 const User = require('../models/user');
+const Chat = require('../models/groupChat');
 
 exports.createActivity = async (req, res) => {
   const { title, date, location, link, userId } = req.body;
@@ -138,3 +139,52 @@ exports.joinActivity = async (req, res) => {
     }
   };
   
+  exports.postGroupChat = async (req, res) => {
+    const { id } = req.params;
+    const { body, userId } = req.body;
+
+    try {
+      if(!body) {
+        return res.status(400).json({ error: 'Body is required fields' });
+      }
+
+      const newChat = await Chat.create({
+        activityId: id,
+        user: userId,
+        body
+      });
+
+      res.status(201).json(newChat);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Server error '});
+    }
+  }
+
+  exports.getGroupChat = async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Activity ID is required' });
+    }
+    try {
+      const chat = await Chat.find({ activityId: id }).populate('user', 'first_name last_name bio program entrance_year profile_picture');
+      res.json({ chat });
+    } catch (error) {
+      console.log(`Error fetching chat for activity ID ${id}:`, error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  }
+
+  exports.deleteGroupChat = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const chat = await Chat.findByIdAndDelete(id);
+      if (!chat) {
+        return res.status(404).json({ error: 'Chat not found' });
+      }
+      res.json({ message: 'Chat deleted successfully' });
+    } catch (error) {
+      console.error(`Error deleting chat with ID ${id}:`, error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  }
