@@ -1,15 +1,13 @@
 const Notification = require('../models/Notification');
 
-exports.createNotification = async (req, res) => {
-  const { user, title, message } = req.body;
-
+exports.createNotification = async (user, message) => {
   try {
-    const notification = new Notification({ user, title, message });
+    const notification = new Notification({ user, message });
     await notification.save();
-    res.status(201).json(notification);
+    return notification;
   } catch (error) {
     console.error('Error creating notification:', error.message);
-    res.status(500).json({ error: 'Server error' });
+    throw new Error('Server error');
   }
 };
 
