@@ -16,16 +16,11 @@ const freeboardRoutes = require('./routes/freeboardRoutes');
 const eventRoutes = require('./routes/eventRoute');
 const userRoutes = require('./routes/userRoute');
 const profileRoutes = require('./routes/profileRoutes');
+const ticketRoutes = require('./routes/titcketRoute');
+const ticketResponseRoutes = require('./routes/ticketResponse');
 
 const app = express();
-app.use(
-  cors({
-    origin:
-      "https://prj-666-front-9dco7a5gm-namandeepwadhwas-projects.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(passport.initialize());
 app.use(express.json());
@@ -105,3 +100,5 @@ app.use('/', activityRoutes);
 app.use('/', answerRoutes);
 app.use('/', eventRoutes);
 app.use('/', userRoutes);
+app.use('/', ticketRoutes);
+app.use('/', ticketResponseRoutes);
