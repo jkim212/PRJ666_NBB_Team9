@@ -1,5 +1,7 @@
 const Answer=require('../models/answer');
-
+const Question = require('../models/question');
+const User = require('../models/user');
+const Notification = require('../models/Notification');
 
 const getAsnwers=async(req,res)=>{
 
@@ -30,16 +32,30 @@ const answerByUser = async (req, res) => {
 const createAnswer = async (req, res) => {
   const { id } = req.params;
   const { description } = req.body;
-
-
-  
   const userId = req.user.id;
+
   try {
    await  Answer.create({
       description,
       question: id,
       user: userId,
     });
+    
+    //Add notificaiton
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const question = await Question.findById(id);
+    if (question) {
+      const notification = new Notification({
+        user: question.user._id,
+        message: `User ${user.first_name} ${user.last_name} answered your question: ${question.title}`
+      });
+      await notification.save();
+    }
     
 
     res.status(201).json({ message: 'Answer created successfully' });
