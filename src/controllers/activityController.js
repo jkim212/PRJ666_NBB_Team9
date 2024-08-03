@@ -139,8 +139,8 @@ exports.joinActivity = async (req, res) => {
 
       await User.findByIdAndUpdate(userId, { $push: { activities: activity._id } });
 
-      const message = `User ${user.first_name} ${user.last_name} joined your activity: ${activity.title}`;
-      await notificationController.createNotification(activity.user._id, message);
+      //const message = `User ${user.first_name} ${user.last_name} joined your activity: ${activity.title}`;
+      //await notificationController.createNotification(activity.user._id, message);
 
 
       res.json({ message: 'Joined activity successfully', joined: activity.joined });
