@@ -5,6 +5,7 @@ const fs = require('fs');
 const Post = require('../models/post');
 const Comment = require('../models/comments');
 const User = require('../models/user');
+const Notification = require('../models/Notification');
 
 const uploadMiddleware = multer({ dest: 'uploads/' });
 
@@ -77,6 +78,23 @@ router.post('/freeboard/:id/comment', async (req, res) => {
             user: userId,
             body
         });
+
+        //Add Notification
+
+        const user = await User.findById(userId);
+        if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+        }
+
+        const post = await Post.findById(id);
+        if (post) {
+        const notification = new Notification({
+            user: post.user._id,
+            message: `User ${user.first_name} ${user.last_name} commented on your post: ${post.title}`
+        });
+        await notification.save();
+        }
+
 
         res.status(201).json(newComment);
     } catch (err) {
