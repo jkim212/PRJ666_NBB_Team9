@@ -2,7 +2,7 @@ const Activity = require('../models/activity');
 const fs = require('fs');
 const User = require('../models/user');
 const Chat = require('../models/groupChat');
-const notificationController = require('../controllers/notificationController');
+const Notification  = require('../models/Notification')
 
 exports.createActivity = async (req, res) => {
   const { title, date, location, link, userId } = req.body;
@@ -139,7 +139,9 @@ exports.joinActivity = async (req, res) => {
 
       await User.findByIdAndUpdate(userId, { $push: { activities: activity._id } });
 
+      
       const message = `User ${user.first_name} ${user.last_name} joined your activity: ${activity.title}`;
+      
       const notification = new Notification({
         user: activity.user._id,
         message: message,
