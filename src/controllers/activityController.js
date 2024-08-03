@@ -145,6 +145,7 @@ exports.joinActivity = async (req, res) => {
       const notification = new Notification({
         user: activity.user._id,
         message: message,
+        url: `/activities/${activity._id}`
       });
       await notification.save();
 

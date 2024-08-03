@@ -90,7 +90,8 @@ router.post('/freeboard/:id/comment', async (req, res) => {
         if (post) {
         const notification = new Notification({
             user: post.user._id,
-            message: `User ${user.first_name} ${user.last_name} commented on your post: ${post.title}`
+            message: `User ${user.first_name} ${user.last_name} commented on your post: ${post.title}`,
+            url: `/freeboard/${post._id}`
         });
         await notification.save();
         }

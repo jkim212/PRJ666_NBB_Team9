@@ -52,7 +52,8 @@ const createAnswer = async (req, res) => {
     if (question) {
       const notification = new Notification({
         user: question.user._id,
-        message: `User ${user.first_name} ${user.last_name} answered your question: ${question.title}`
+        message: `User ${user.first_name} ${user.last_name} answered your question: ${question.title}`,
+        url: `/ask/${question._id}`
       });
       await notification.save();
     }
