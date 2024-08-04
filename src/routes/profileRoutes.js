@@ -28,6 +28,13 @@ router.put('/profile/:userId', upload.single('profile_picture'), async (req, res
     const userId = req.params.userId;
     const { first_name, last_name, entrance_year, program, bio } = req.body;
     const profile_picture = req.file ? req.file.path : null;
+    let privateFields;
+
+    try {
+      privateFields = JSON.parse(req.body.private_fields);
+    } catch (error) {
+      return res.status(400).send('Invalid private_fields format');
+    }
 
     try {
         const user = await User.findById(userId);
@@ -38,6 +45,7 @@ router.put('/profile/:userId', upload.single('profile_picture'), async (req, res
             user.entrance_year = entrance_year
             user.bio = bio;
             user.program = program;
+            user.private_fields = privateFields;
             await user.save();
             res.sendStatus(200);
         } else {
