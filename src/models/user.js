@@ -34,7 +34,21 @@ bio: {
   type: String,
 },
 posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }]
+activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
+private_fields: {
+  bio: {
+    type: Boolean,
+    default: false,
+  },
+  yearOfEntrance: {
+    type: Boolean,
+    default: false,
+  },
+  program: {
+    type: Boolean,
+    default: false,
+  },
+},
 });
 
 const User = mongoose.model('User', userSchema);
