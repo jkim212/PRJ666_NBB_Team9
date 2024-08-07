@@ -2,17 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const User = require('../models/user');
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, '../uploads/');
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + '-' + file.originalname);
-    }
-  });
-  
-  const upload = multer({ storage: storage });
+const upload = multer();
 
 router.get('/profile/:userId', async (req, res) => {
     const userId = req.params.userId;
@@ -24,28 +14,30 @@ router.get('/profile/:userId', async (req, res) => {
     }
 });
 
-router.put('/profile/:userId', upload.single('profile_picture'), async (req, res) => {
+router.put('/profile/:userId', upload.none(), async (req, res) => {
     const userId = req.params.userId;
-    const { first_name, last_name, entrance_year, program, bio } = req.body;
-    const profile_picture = req.file ? req.file.path : null;
-    let privateFields;
+    let { first_name, last_name, entrance_year, program, bio, profile_picture, private_fields } = req.body;
+
+    if (!profile_picture) {
+        profile_picture = 'https://res.cloudinary.com/dtgdo1ajo/image/upload/v1723006192/vldekmizwzx0t9vea1re.png';
+    }
 
     try {
-      privateFields = JSON.parse(req.body.private_fields);
+        private_fields = JSON.parse(private_fields);
     } catch (error) {
-      return res.status(400).send('Invalid private_fields format');
+        return res.status(400).send('Invalid private_fields format');
     }
 
     try {
         const user = await User.findById(userId);
         if (user) {
-            user.profile_picture = profile_picture || user.profile_picture;
+            user.profile_picture = profile_picture;
             user.first_name = first_name;
             user.last_name = last_name;
-            user.entrance_year = entrance_year
+            user.entrance_year = entrance_year;
             user.bio = bio;
             user.program = program;
-            user.private_fields = privateFields;
+            user.private_fields = private_fields;
             await user.save();
             res.sendStatus(200);
         } else {
@@ -54,6 +46,6 @@ router.put('/profile/:userId', upload.single('profile_picture'), async (req, res
     } catch (error) {
         res.status(500).send(error);
     }
-})
+});
 
 module.exports = router;
