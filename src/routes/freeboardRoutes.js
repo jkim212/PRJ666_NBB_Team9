@@ -10,17 +10,8 @@ const Notification = require('../models/Notification');
 const uploadMiddleware = multer({ dest: 'uploads/' });
 
 router.put('/freeboard/edit/:id', uploadMiddleware.single('file'), async (req, res) => {
-    let newPath = null;
-    if (req.file) {
-        const { originalname, path } = req.file;
-        const parts = originalname.split('.');
-        const ext = parts[parts.length - 1];
-        newPath = path + '.' + ext;
-        fs.renameSync(path, newPath);
-    }
-
     const { id } = req.params; 
-    const { title, content } = req.body;
+    const { title, content, image } = req.body;
 
     try {
         const postDoc = await Post.findById(id);
@@ -30,9 +21,7 @@ router.put('/freeboard/edit/:id', uploadMiddleware.single('file'), async (req, r
 
         postDoc.title = title;
         postDoc.content = content;
-        if (newPath) {
-            postDoc.image = newPath;
-        }
+        postDoc.image = newPath;
 
         await postDoc.save();
         res.json(postDoc);
@@ -42,20 +31,12 @@ router.put('/freeboard/edit/:id', uploadMiddleware.single('file'), async (req, r
 });
   
 router.post('/freeboard', uploadMiddleware.single('file'), async (req, res) => {
-  
-    const { originalname, path } = req.file;
-    const parts = originalname.split('.');
-    const ext = parts[parts.length - 1];
-    const newPath = path + '.' + ext;
-    fs.renameSync(path, newPath);
-  
-  
-    const { title, content, userId } = req.body;
+    const { title, content, userId, image } = req.body;
 
     const postDoc = await Post.create({
       title,
       content,
-      image: newPath,
+      image,
       user: userId,
     });
 
