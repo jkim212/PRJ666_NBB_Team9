@@ -59,17 +59,7 @@ exports.getActivityById = async (req, res) => {
 
 exports.updateActivity = async (req, res) => {
   const { id } = req.params;
-  const { title, date, location, link } = req.body;
-  let image = null;
-
-  if (req.file) {
-    const { originalname, path } = req.file;
-    const parts = originalname.split('.');
-    const ext = parts[parts.length - 1];
-    const newPath = path + '.' + ext;
-    fs.renameSync(path, newPath);
-    image = newPath;
-  }
+  const { title, date, location, link, image } = req.body;
 
   try {
     const activity = await Activity.findById(id);
