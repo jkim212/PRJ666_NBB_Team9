@@ -5,17 +5,7 @@ const Chat = require('../models/groupChat');
 const Notification  = require('../models/Notification')
 
 exports.createActivity = async (req, res) => {
-  const { title, date, location, link, userId } = req.body;
-  let image = null;
-
-  if (req.file) {
-    const { originalname, path } = req.file;
-    const parts = originalname.split('.');
-    const ext = parts[parts.length - 1];
-    const newPath = path + '.' + ext;
-    fs.renameSync(path, newPath);
-    image = newPath;
-  }
+  const { title, date, location, link, userId, image } = req.body;
 
   try {
     const newActivity = new Activity({
@@ -23,7 +13,7 @@ exports.createActivity = async (req, res) => {
       date,
       location,
       link,
-      image,
+      image: image,
       user: userId
     });
 
