@@ -98,7 +98,7 @@ router.get('/freeboard/:id/comments', async (req, res) => {
   
 router.get('/freeboard', async (req,res) => {
     try {
-        const posts = await Post.find().sort({createdAt: -1}).populate('user', 'first_name last_name');
+        const posts = await Post.find().sort({createdAt: -1}).populate('user', 'first_name last_name entrance_year bio program profile_picture');
         res.status(200).json(posts);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching posts', error});
@@ -108,7 +108,7 @@ router.get('/freeboard', async (req,res) => {
 router.get('/freeboard/:id', async (req, res) => {
     const {id} = req.params;
     try {
-        const postDoc = await Post.findById(id).populate('user', 'first_name last_name');
+        const postDoc = await Post.findById(id).populate('user', 'first_name last_name bio entrance_year prgram profile_picture');
         if (!postDoc) {
             return res.status(404).json({error: 'Post not found'});
         }
