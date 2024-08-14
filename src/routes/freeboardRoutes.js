@@ -21,7 +21,8 @@ router.put('/freeboard/edit/:id', uploadMiddleware.single('file'), async (req, r
 
         postDoc.title = title;
         postDoc.content = content;
-        postDoc.image = newPath;
+        postDoc.image = image;
+
 
         await postDoc.save();
         res.json(postDoc);
@@ -88,7 +89,7 @@ router.post('/freeboard/:id/comment', async (req, res) => {
 router.get('/freeboard/:id/comments', async (req, res) => {
     const { id } = req.params;
     try {
-        const comments = await Comment.find({ postId: id }).sort({ createdAt: -1 }).populate('user', 'first_name last_name');
+        const comments = await Comment.find({ postId: id }).sort({ createdAt: -1 }).populate('user', 'first_name last_name profile_picture private_fields');
         res.json({ comments });
     } catch (error) {
         console.error(`Error fetching comments for post ID ${id}:`, error);
@@ -98,7 +99,7 @@ router.get('/freeboard/:id/comments', async (req, res) => {
   
 router.get('/freeboard', async (req,res) => {
     try {
-        const posts = await Post.find().sort({createdAt: -1}).populate('user', 'first_name last_name entrance_year bio program profile_picture');
+        const posts = await Post.find().sort({createdAt: -1}).populate('user', 'first_name last_name entrance_year bio program profile_picture private_fields');
         res.status(200).json(posts);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching posts', error});
@@ -108,7 +109,7 @@ router.get('/freeboard', async (req,res) => {
 router.get('/freeboard/:id', async (req, res) => {
     const {id} = req.params;
     try {
-        const postDoc = await Post.findById(id).populate('user', 'first_name last_name bio entrance_year prgram profile_picture');
+        const postDoc = await Post.findById(id).populate('user', 'first_name last_name bio entrance_year prgram profile_picture private_fields');
         if (!postDoc) {
             return res.status(404).json({error: 'Post not found'});
         }
